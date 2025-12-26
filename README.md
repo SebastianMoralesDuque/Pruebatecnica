@@ -79,4 +79,3 @@ pytest -v
 
 ## 👤 Credits & Integrity
 Developed as a premium solution for inventory transparency using cutting-edge technologies.
-# Pruebatecnica
