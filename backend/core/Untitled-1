@@ -1,0 +1,14 @@
+Administrador:
+Correo: admin@example.com
+Password: admin
+
+Usuario Externo:
+Correo: external@example.com
+Password: external123
+
+
+
+solana balance 4ThzNAZJkndwjS6AuULjT2mgeWeM82tEJVQrFoy5aCKn --url https://api.testnet.solana.com
+
+
+solana airdrop 2 4ThzNAZJkndwjS6AuULjT2mgeWeM82tEJVQrFoy5aCKn
