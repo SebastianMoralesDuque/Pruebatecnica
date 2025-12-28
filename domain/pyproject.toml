@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "shared_domain"
+version = "0.1.0"
+description = "Domain layer for stock management"
+authors = ["Sebastian"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

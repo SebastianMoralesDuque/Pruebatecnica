@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Empresa, Producto, User
+from .models import User, Empresa, Producto
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, PackagePlus, Box } from 'lucide-react';
+import { ShoppingBag, PackagePlus, Box, Trash2 } from 'lucide-react';
 import { Input } from '../components/atoms/Input';
 import { Button } from '../components/atoms/Button';
 import { LoadingSpinner } from '../components/atoms/LoadingSpinner';
 import { SearchInput } from '../components/atoms/SearchInput';
 import { Feedback } from '../components/molecules/Feedback';
+import { Modal } from '../components/molecules/Modal';
 import { useAuth } from '../context/AuthContext';
 
 export const ProductosPage = () => {
@@ -18,6 +19,7 @@ export const ProductosPage = () => {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [feedback, setFeedback] = useState(null);
+    const [deleteModal, setDeleteModal] = useState({ show: false, codigo: null });
 
     useEffect(() => {
         fetchInitialData();
@@ -64,6 +66,25 @@ export const ProductosPage = () => {
             fetchInitialData();
         } catch (err) {
             setFeedback({ type: 'error', message: 'Error al registrar el producto. Verifica los datos.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const confirmDelete = (codigo) => {
+        setDeleteModal({ show: true, codigo });
+    };
+
+    const handleDelete = async () => {
+        setLoading(true);
+        setFeedback(null);
+        try {
+            await api.delete(`/productos/${deleteModal.codigo}/`);
+            setFeedback({ type: 'success', message: 'Producto eliminado exitosamente.' });
+            setDeleteModal({ show: false, codigo: null });
+            fetchInitialData();
+        } catch (err) {
+            setFeedback({ type: 'error', message: 'Error al eliminar el producto.' });
         } finally {
             setLoading(false);
         }
@@ -161,9 +182,20 @@ export const ProductosPage = () => {
                                                     <p className="text-xs text-indigo-400 font-medium">NIT Empresa: {p.empresa}</p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-xl font-bold text-emerald-400 font-mono">${p.precios.USD} <span className="text-xs opacity-50 uppercase tracking-tighter">USD</span></p>
-                                                <p className="text-xs text-muted font-mono">${p.precios.COP} COP</p>
+                                            <div className="flex flex-col items-end gap-2">
+                                                <div className="text-right">
+                                                    <p className="text-xl font-bold text-emerald-400 font-mono">${p.precios.USD} <span className="text-xs opacity-50 uppercase tracking-tighter">USD</span></p>
+                                                    <p className="text-xs text-muted font-mono">${p.precios.COP} COP</p>
+                                                </div>
+                                                {user?.is_administrator && (
+                                                    <button
+                                                        onClick={() => confirmDelete(p.codigo)}
+                                                        className="p-2 text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors"
+                                                        title="Eliminar producto"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="bg-black/20 p-4 rounded-2xl border border-white/5">
@@ -179,6 +211,32 @@ export const ProductosPage = () => {
                     )}
                 </div>
             </div>
+
+            <Modal
+                isOpen={deleteModal.show}
+                onClose={() => setDeleteModal({ show: false, codigo: null })}
+                title="Eliminar Producto"
+                variant="danger"
+            >
+                <p className="text-slate-300 mb-8">
+                    Esta acción eliminará permanentemente el producto del inventario. Esta acción no se puede deshacer.
+                </p>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setDeleteModal({ show: false, codigo: null })}
+                        className="flex-1 py-3 rounded-xl bg-white/5 text-slate-300 hover:bg-white/10 transition-colors font-semibold"
+                    >
+                        Cancelar
+                    </button>
+                    <Button
+                        onClick={handleDelete}
+                        loading={loading}
+                        className="flex-1 bg-red-500 hover:bg-red-600 text-white"
+                    >
+                        Eliminar Definitivamente
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 };

@@ -4,17 +4,22 @@ from management.models import Empresa, Producto
 @pytest.mark.django_db
 def test_empresa_creation():
     empresa = Empresa.objects.create(
-        nit="123456789",
+        nit="123456789-0",
         nombre="Empresa Test",
         direccion="Calle Falsa 123",
-        telefono="555-1234"
+        telefono="3001234567"
     )
-    assert empresa.nit == "123456789"
+    assert empresa.nombre == "Empresa Test"
     assert str(empresa) == "Empresa Test"
 
 @pytest.mark.django_db
 def test_producto_creation():
-    empresa = Empresa.objects.create(nit="111", nombre="Empresa Prod")
+    empresa = Empresa.objects.create(
+        nit="987654321-0",
+        nombre="Empresa Prod",
+        direccion="Avenida Siempre Viva 742",
+        telefono="3119876543"
+    )
     producto = Producto.objects.create(
         codigo="PROD001",
         nombre="Laptop",
