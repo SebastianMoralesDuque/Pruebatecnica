@@ -199,6 +199,12 @@ SPECTACULAR_SETTINGS = {
 
 CORS_ALLOW_ALL_ORIGINS = True  # For development purposes
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://pruebatecnica-production-38af.up.railway.app",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
 # PARA ENVÍO DE CORREOS REALES: Regístrate en resend.com y obtén tu API Key
 RESEND_API_KEY = env('RESEND_API_KEY', default=None)
 
