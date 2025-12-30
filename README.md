@@ -2,9 +2,6 @@
 
 StockPro is a high-performance inventory management system that leverages **Artificial Intelligence** for executive analysis and **Blockchain Technology** for data immutability.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyour-username%2Fstockpro&env=DB_NAME,DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,GOOGLE_API_KEY,RESEND_API_KEY,SOLANA_PRIVATE_KEY,SECRET_KEY,DEBUG)
-
----
 
 ## 🏗️ Technical Architecture
 
@@ -85,16 +82,24 @@ python manage.py runserver
 
 ---
 
-## 🔑 Access Credentials
+## 🔑 Credenciales de Prueba (Test Credentials)
 
-### Django Admin Panel
-- **URL**: [http://localhost:8000/domain/admin/](http://localhost:8000/domain/admin/)
-- **User**: `admin@example.com`
-- **Password**: `admin123`
+Para probar la aplicación y el panel administrativo, utilice las siguientes credenciales:
 
-### API Documentation (Swagger)
-- **Swagger UI**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
-- **ReDoc**: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
+### 1. Super Admin (Acceso Total)
+Este usuario tiene acceso tanto al Frontend como al **Django Admin**.
+- **Usuario/Correo**: `admin@example.com`
+- **Contraseña**: `admin123`
+- **Ruta Django Admin**: [https://pruebatecnica-production-38af.up.railway.app/domain/admin/](https://pruebatecnica-production-38af.up.railway.app/domain/admin/)
+
+### 2. Usuario Estándar (Acceso Limitado)
+Este usuario srive para probar la funcionalidad básica desde el Frontend.
+- **Usuario/Correo**: `user@example.com`
+- **Contraseña**: `user123`
+
+### 📚 API Documentation
+- **Swagger UI**: [https://pruebatecnica-production-38af.up.railway.app/api/docs/](https://pruebatecnica-production-38af.up.railway.app/api/docs/)
+- **ReDoc**: [https://pruebatecnica-production-38af.up.railway.app/api/redoc/](https://pruebatecnica-production-38af.up.railway.app/api/redoc/)
 
 ---
 
