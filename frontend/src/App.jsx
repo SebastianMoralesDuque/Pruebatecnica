@@ -33,7 +33,7 @@ function AppContent() {
                     </Routes>
                 </DashboardLayout>
             ) : (
-                <RedirectToAbsolute url="http://localhost:3000/login" />
+                <Navigate to="/login" replace />
             )} />
         </Routes>
     );
@@ -47,12 +47,7 @@ const ProtectedRoute = ({ children, isAdminRequired = false }) => {
     return children;
 };
 
-const RedirectToAbsolute = ({ url }) => {
-    React.useEffect(() => {
-        window.location.href = url;
-    }, [url]);
-    return null;
-};
+
 
 function App() {
     return (
