@@ -2,16 +2,118 @@
 
 StockPro is a high-performance inventory management system that leverages **Artificial Intelligence** for executive analysis and **Blockchain Technology** for data immutability.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyour-username%2Fstockpro&env=DB_NAME,DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,GOOGLE_API_KEY,RESEND_API_KEY,SOLANA_PRIVATE_KEY,SECRET_KEY,DEBUG)
+
 ---
 
 ## 🏗️ Technical Architecture
 
 ### Tech Stack
-- **Backend**: Django 5.x + Django Rest Framework
+- **Backend**: Django 5.x + Django Rest Framework + Poetry
 - **Database**: PostgreSQL (Hosted on **Supabase** via IPv4 Transaction Pooler)
 - **Frontend**: React + Vite + Tailwind CSS + Framer Motion
 - **AI Engine**: Google Gemini (generative-ai)
 - **Blockchain**: Solana Protocol (Devnet)
+
+### Architecture Principles
+This project follows **Clean Architecture** principles and **SOLID** design guidelines to ensure maintainability and scalability.
+
+- **Clean Architecture**:
+  - **Shared Domain**: Contains the core business entities (`Empresa`, `Producto`) and exceptions. These are now implemented as Django Models for practicality while maintaining domain isolation logic where possible.
+  - **Application**: Contains Use Cases (`GestionarProducto`, `ProcesarInventario`) that implement business logic orchestrating the domain and infrastructure.
+  - **Infrastructure**: Handles external concerns like Database (Django ORM), AI Service (Gemini), Blockchain Service (Solana), and Email (Resend).
+  - **Interface Adapters (Management App)**: Django Views and Serializers acting as entry points (Controllers).
+
+- **SOLID**:
+  - **S**R: Each service (AI, PDF, Blockchain) has a single responsibility.
+  - **O**CP: System is open for extension (e.g., adding new notification channels) without modifying existing logic.
+  - **L**SP: Services and repositories follow expected protocols.
+  - **I**SP: Interfaces are specific to client needs.
+  - **D**IP: High-level modules delegate implementation details to low-level modules via abstractions (dependency injection pattern used implicitly).
+
+---
+
+## 🛠️ Installation & Setup (Using Poetry)
+
+We use **Poetry** for dependency management.
+
+### 1. Prerequisites
+- Python 3.11+
+- Poetry installed (`curl -sSL https://install.python-poetry.org | python3 -`)
+
+### 2. Backend Setup
+```bash
+# Clone repository
+git clone <repository_url>
+cd backend
+
+# Install dependencies
+poetry install
+
+# Activate shell
+poetry shell
+```
+
+### 3. Environment Configuration
+Create a `.env` file in `backend/` based on the template:
+```env
+DB_NAME=postgres
+DB_USER=postgres.zngvnppcnybhnzjwevtz
+DB_PASSWORD=your_password
+DB_HOST=aws-1-eu-west-1.pooler.supabase.com
+DB_PORT=6543
+GOOGLE_API_KEY=your_key
+RESEND_API_KEY=your_key
+SOLANA_PRIVATE_KEY=your_hex_key
+```
+
+### 4. Database Setup
+```bash
+python manage.py migrate
+```
+
+### 5. Create Superuser (Optional)
+```bash
+python manage.py createsuperuser
+# OR use default credentials provided below
+```
+
+### 6. Start Server
+```bash
+python manage.py runserver
+```
+
+---
+
+## 🔑 Access Credentials
+
+### Django Admin Panel
+- **URL**: [http://localhost:8000/domain/admin/](http://localhost:8000/domain/admin/)
+- **User**: `admin@example.com`
+- **Password**: `admin123`
+
+### API Documentation (Swagger)
+- **Swagger UI**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
+- **ReDoc**: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
+
+---
+
+## 🧪 Testing Suite
+
+We include Unit Tests and Integration Tests.
+
+### Running Tests
+Inside the `backend` directory (with virtual environment active):
+```bash
+pytest
+```
+Or with detailed output:
+```bash
+pytest -v
+```
+
+- **Unit Tests**: Cover specific logic in Use Cases and Domain.
+- **Integration Tests**: Verify API Endpoints and Database interactions.
 
 ---
 
@@ -21,7 +123,7 @@ StockPro uses the Solana blockchain to provide **Proof of Integrity** for every 
 
 ### How it works:
 1. **Hashing**: We generate a unique SHA-256 fingerprint (Hash) of the inventory data and the AI analysis.
-2. **On-Chain Recording**: This hash is sent to the **Solana Memo Program** (`MemoSq4gqABvAn9NoSKeyJv6Ysl7R8L34KxyTqQuX9A`).
+2. **On-Chain Recording**: This hash is sent to the **Solana Memo Program** (`MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr`).
 3. **Immutability**: Once recorded, the transaction hash (TxHash) serves as a permanent, timestamped receipt that proves the data has not been altered.
 
 ### 🚰 Solana Faucet (Devnet)
@@ -33,50 +135,3 @@ To perform certifications, you need **Devnet SOL**.
    ```bash
    solana balance 4ThzNAZJkndwjS6AuULjT2mgeWeM82tEJVQrFoy5aCKn --url https://api.devnet.solana.com
    ```
-
----
-
-## 🛠️ Installation & Setup
-
-### 📦 Backend Deployment
-1. **Virtual Env**: `python -m venv venv` && `source venv/bin/activate`
-2. **Install**: `pip install -r requirements.txt`
-3. **Environment**: Create a `.env` file in `backend/` based on the template:
-   ```env
-   DB_NAME=postgres
-   DB_USER=postgres.zngvnppcnybhnzjwevtz
-   DB_PASSWORD=your_password
-   DB_HOST=aws-1-eu-west-1.pooler.supabase.com
-   DB_PORT=6543
-   GOOGLE_API_KEY=your_key
-   RESEND_API_KEY=your_key
-   SOLANA_PRIVATE_KEY=your_hex_key
-   ```
-4. **Database**: `python manage.py migrate`
-5. **Start**: `python manage.py runserver`
-
-### 💻 Frontend Deployment
-1. **Install**: `npm install`
-2. **Start**: `npm run dev`
-
----
-
-## 🧪 Testing Suite
-Ensure system reliability with Pytest:
-```bash
-cd backend
-pytest -v
-```
-*Current Coverage: Models, ViewSets, AI Mocking, and Solana Transaction Proofs.*
-
----
-
-## 📖 API Documentation
-- **Swagger UI**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
-- **ReDoc**: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
-
----
-
-## 👤 Credits & Integrity
-Developed as a premium solution for inventory transparency using cutting-edge technologies.
-# Pruebatecnica

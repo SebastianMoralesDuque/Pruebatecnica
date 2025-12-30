@@ -23,6 +23,30 @@ def test_list_empresas(auth_client):
     assert len(response.data) == 1
 
 @pytest.mark.django_db
+def test_create_empresa(auth_client):
+    data = {
+        "nit": "900.123.456-1",
+        "nombre": "Nueva Empresa",
+        "direccion": "Avenida 1",
+        "telefono": "1234567"
+    }
+    response = auth_client.post('/api/empresas/', data, format='json')
+    assert response.status_code == 201
+    assert response.data['nit'] == "900.123.456-1"
+
+@pytest.mark.django_db
+def test_create_empresa_invalid_nit(auth_client):
+    data = {
+        "nit": "", # NIT vacío dispara InvalidNITError en Dominio
+        "nombre": "Empresa Fallida",
+        "direccion": "N/A",
+        "telefono": "0"
+    }
+    response = auth_client.post('/api/empresas/', data, format='json')
+    assert response.status_code == 400
+    assert response.data['code'] == "InvalidNITError"
+
+@pytest.mark.django_db
 def test_create_producto(auth_client):
     empresa = Empresa.objects.create(nit='456', nombre='Comp A', direccion='D1', telefono='T1')
     data = {

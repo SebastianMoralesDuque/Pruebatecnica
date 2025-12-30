@@ -1,29 +1,38 @@
 import google.generativeai as genai
 from django.conf import settings
+from shared_domain.exceptions import InfrastructureError
 
 class AIService:
     @staticmethod
     def generate_inventory_analysis(productos):
-        api_key = getattr(settings, 'GOOGLE_API_KEY', None)
-        if not api_key or "REEMPLAZAR" in api_key:
-            return "Resumen de Inventario:\nInventario generado automáticamente sin análisis de IA (API Key no configurada)."
+        print("AIService: Starting analysis...")
+        if not settings.GOOGLE_API_KEY:
+            print("AIService: Warning: GOOGLE_API_KEY is missing.")
+            return "Análisis no disponible: API Key faltante."
         
+        genai.configure(api_key=settings.GOOGLE_API_KEY)
+        model = genai.GenerativeModel('gemini-2.5-flash-lite')
+        
+        print(f"AIService: Processing {len(productos)} products...")
         try:
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-2.0-flash-lite')
-            
             inventory_text = "\n".join([
-                f"- {p.nombre} ({p.codigo}) de {p.empresa.nombre}: {p.precios}" 
-                for p in productos[:30] # Limit to 30 for token limits
+                f"- {p.nombre} ({p.codigo}) de {p.empresa.nombre if p.empresa else 'Empresa Desconocida'}: {p.precios}" 
+                for p in productos[:30]
             ])
+        except Exception as e:
+            print(f"AIService: Error formatting inventory text: {str(e)}")
+            raise InfrastructureError(f"Error formateando datos para IA: {str(e)}")
+        
+        prompt = (
+            f"Actúa como un analista de inventarios experto. Analiza la siguiente lista de productos y genera un reporte ejecutivo breve.\n\n"
+            f"Datos del inventario:\n{inventory_text}"
+        )
             
-            prompt = (
-                f"Actúa como un analista de inventarios experto. Analiza la siguiente lista de productos y genera un reporte ejecutivo breve (máximo 3 párrafos).\n"
-                f"Destaca la diversidad de productos, marcas principales y rango de precios. Usa un tono profesional.\n\n"
-                f"Datos del inventario (muestra):\n{inventory_text}"
-            )
-            
+        try:
+            print("AIService: Requesting Gemini content generation...")
             response = model.generate_content(prompt)
+            print("AIService: Gemini response received.")
             return response.text
         except Exception as e:
-            return f"No se pudo generar el análisis de IA: {str(e)}"
+            print(f"AIService: Gemini Error: {str(e)}")
+            raise InfrastructureError(f"Error en el servicio de IA: {str(e)}")

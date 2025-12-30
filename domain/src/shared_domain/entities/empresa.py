@@ -1,13 +1,24 @@
+from django.db import models
 from ..exceptions import InvalidNITError
 
-class Empresa:
-    def __init__(self, nit: str, nombre: str, direccion: str, telefono: str):
-        if not nit:
+class Empresa(models.Model):
+    nit = models.CharField(max_length=20, primary_key=True)
+    nombre = models.CharField(max_length=255)
+    direccion = models.TextField()
+    telefono = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = 'empresa'
+        verbose_name = 'Empresa'
+        verbose_name_plural = 'Empresas'
+
+    def clean(self):
+        if not self.nit:
             raise InvalidNITError("El NIT es obligatorio")
-        self.nit = nit
-        self.nombre = nombre
-        self.direccion = direccion
-        self.telefono = telefono
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre

@@ -16,6 +16,7 @@ from .serializers import EmpresaSerializer, ProductoSerializer, MyTokenObtainPai
 # Application Layer (Use Cases)
 from application.use_cases.inventario import ProcesarInventarioUseCase, CertificarInventarioUseCase
 from application.use_cases.producto import GestionarProductoUseCase
+from application.use_cases.empresa import GestionarEmpresaUseCase
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -28,6 +29,12 @@ class EmpresaViewSet(viewsets.ModelViewSet):
     serializer_class = EmpresaSerializer
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'nit'
+
+    def create(self, request, *args, **kwargs):
+        # Delegar totalmente al Caso de Uso
+        empresa_model = GestionarEmpresaUseCase.crear_empresa(request.data)
+        serializer = self.get_serializer(empresa_model)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()

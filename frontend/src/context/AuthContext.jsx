@@ -9,8 +9,9 @@ export const AuthProvider = ({ children }) => {
 
     // Dynamic API instance configuration
     const api = useMemo(() => {
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
         const instance = axios.create({
-            baseURL: 'http://localhost:8000/api',
+            baseURL: `${baseURL}/api`,
         });
 
         // Request Interceptor
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
                     const refreshToken = localStorage.getItem('refreshToken');
                     if (refreshToken) {
                         try {
-                            const res = await axios.post('http://localhost:8000/api/token/refresh/', {
+                            const res = await axios.post(`${baseURL}/api/token/refresh/`, {
                                 refresh: refreshToken
                             });
                             localStorage.setItem('token', res.data.access);
@@ -66,7 +67,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.clear();
         setAuth(false);
         setUser(null);
-        window.location.href = 'http://localhost:3000/login';
+        // Redirect to login (handle via router usually, but keeping simple)
+        // window.location.href = '/login'; 
     };
 
     const value = {
