@@ -42,6 +42,7 @@ google-generativeai==0.8.6
 googleapis-common-protos==1.72.0
 grpcio==1.76.0
 grpcio-status==1.71.2
+gunicorn==23.0.0
 h11==0.16.0
 hexbytes==1.3.1
 httpcore==1.0.9
@@ -99,7 +100,7 @@ rsa==4.9.1
 ruamel.yaml==0.18.17
 ruamel.yaml.clib==0.2.15
 ruff==0.14.10
--e git+https://github.com/SebastianMoralesDuque/Pruebatecnica.git@fd51646e9a9785d1a1c7530a6fc7b6343ab1d530#egg=shared_domain&subdirectory=domain
+-e git+https://github.com/SebastianMoralesDuque/Pruebatecnica.git@bcff87827c0a50a31c3c44394ff70cfbf7a62d85#egg=shared_domain&subdirectory=domain
 shellingham==1.5.4
 six==1.17.0
 solana==0.36.10
